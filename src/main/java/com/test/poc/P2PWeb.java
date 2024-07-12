@@ -28,14 +28,4 @@ public class P2PWeb {
 
         return response;
     }
-
-    @RequestMapping(method = RequestMethod.POST, value = "dbservice/clearh2",
-            consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<JsonObject> dbServiceWebAPIForClearH2(@RequestBody JsonObject request) {
-        JsonObject result = apiExecutor.processApiRequestForClearH2Db(request);
-
-        ResponseEntity<JsonObject> response = new ResponseEntity<>(result, HttpStatus.OK);
-
-        return response;
-    }
 }
