@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>WebRTC Test</title>
+</head>
+<body>
+
+<script type="text/javascript">
+    // Client-1
+	// var conn = new WebSocket('ws://localhost:9095/poc/socket');
+
+    // conn.onmessage = function(event) {
+    //     if(JSON.parse(event.data).event==="candidate"){
+    //         console.log("candidate");
+    //         peerConnection.addIceCandidate(new RTCIceCandidate(JSON.parse(event.data).data));
+    //     }
+    //      if(JSON.parse(event.data).event==="offer"){
+    //         console.log("offer");
+    //         peerConnection.createAnswer(function(answer) {
+    //                 peerConnection.setLocalDescription(answer);
+    //                     send({
+    //                         event : "answer",
+    //                         data : answer
+    //                         });
+    //                     }, function(error) {
+    //                 // Handle error here
+    //                 });
+    //         peerConnection.setRemoteDescription(new RTCSessionDescription(JSON.parse(event.data).data));
+    //     }
+    //     console.log("Message:", event.data);
+    // };
+
+    // peerConnection.createAnswer(function(answer) {
+    //     peerConnection.setLocalDescription(answer);
+    //         send({
+    //             event : "answer",
+    //             data : answer
+    //         });
+    //     }, function(error) {
+    //     // Handle error here
+    // });
+
+    // dataChannel.send('testdata');
+
+    // Client-2
+    // var conn = new WebSocket('ws://localhost:9095/poc/socket');
+
+    // conn.onmessage = function(event) {
+    //     if(JSON.parse(event.data).event==="answer"){
+    //         peerConnection.setRemoteDescription(new RTCSessionDescription(JSON.parse(event.data).data));
+    //         console.log("Message:", event.data);
+    //     }
+    // };
+    // peerConnection.createOffer(function(offer) {
+    //     console.log(offer);
+    //     send({
+    //         event : "offer",
+    //         data : offer
+    //     });
+    //     peerConnection.setLocalDescription(offer);
+    // }, function(error) {
+    // // Handle error here
+    // });
+
+    // dataChannel.send('testdata2');
+
+	var configuration = null;
+	var peerConnection = new RTCPeerConnection(configuration);
+	var dataChannel = peerConnection.createDataChannel("dataChannel", { reliable: true });
+
+	dataChannel.onerror = function(error) {
+    	console.log("Error:", error);
+	};
+	dataChannel.onclose = function() {
+    	console.log("Data channel is closed");
+	};
+
+    function send(message) {
+        // console.log(message);
+        conn.send(JSON.stringify(message));
+    }
+
+    dataChannel.onmessage = function(event) {
+        console.log("Message:", event.data);
+    };
+
+    peerConnection.ondatachannel = function (event) {
+        console.log("Channel Established");
+        dataChannel = event.channel;
+    };
+
+    peerConnection.onicecandidate = function(event) {
+        console.log("ICEEvent Triggered");
+        if (event.candidate) {
+            send({
+                event : "candidate",
+                data : event.candidate
+            });
+        }
+    };
+</script>
+</body>
+</html>
