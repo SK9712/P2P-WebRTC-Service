@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Component
-public class SocketHandler extends TextWebSocketHandler {
+public class P2PSocketHandler extends TextWebSocketHandler {
 
     List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
 
@@ -19,18 +19,16 @@ public class SocketHandler extends TextWebSocketHandler {
             throws InterruptedException, IOException {
         for (WebSocketSession webSocketSession : sessions) {
             if (webSocketSession.isOpen() && !session.getId().equals(webSocketSession.getId())) {
-//                if (webSocketSession.isOpen()) {
                     webSocketSession.sendMessage(message);
                 }
-//            }
         }
     }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        System.out.println(session.getLocalAddress());
-        System.out.println(session.getRemoteAddress());
-        session.sendMessage(new TextMessage("ted"));
+        System.out.println("LocalAddress: " + session.getLocalAddress());
+        System.out.println("RemoteAddress: " + session.getRemoteAddress());
+        session.sendMessage(new TextMessage("Ping"));
         sessions.add(session);
     }
 }

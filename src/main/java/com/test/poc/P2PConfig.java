@@ -17,7 +17,7 @@ public class P2PConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new SocketHandler(), "/poc/socket")
+        registry.addHandler(new P2PSocketHandler(), "/poc/socket")
                 .setAllowedOrigins("*");
     }
 }
