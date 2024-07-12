@@ -16,11 +16,17 @@ public class P2PSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message)
-            throws InterruptedException, IOException {
-        for (WebSocketSession webSocketSession : sessions) {
-            if (webSocketSession.isOpen() && !session.getId().equals(webSocketSession.getId())) {
+            throws IOException {
+        if(message.getPayload().equalsIgnoreCase("pong"))
+            System.out.println("Connection Established from client: " + session.getId());
+        else {
+            for (WebSocketSession webSocketSession : sessions) {
+                System.out.println("Sending message from client: " + session.getId() + " to all connected clients");
+                System.out.println("Message: " + message.getPayload());
+                if (webSocketSession.isOpen() && !session.getId().equals(webSocketSession.getId())) {
                     webSocketSession.sendMessage(message);
                 }
+            }
         }
     }
 
